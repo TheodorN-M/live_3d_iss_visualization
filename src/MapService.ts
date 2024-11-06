@@ -47,7 +47,7 @@ export function initializeMap(container: HTMLDivElement) : void {
 }
 
 function drawSphere(r: number) {
-
+  
   if (threeLayer){
     threeLayer.prepareToDraw = function (gl, scene, camera) {
       const sphereGeometry = new THREE.SphereGeometry(r, 32, 32);
@@ -61,9 +61,10 @@ function drawSphere(r: number) {
   }
 }
 
-function moveObj(obj: any, toLon: number, toLat: number, toAlt: number) {
+
+function moveObj(obj: THREE.Mesh, toLon: number, toLat: number, toAlt: number) {
   if (threeLayer) {
-    var v3 = threeLayer.coordinateToVector3([toLon, toLat, toAlt])
+    var v3 = threeLayer.coordinateToVector3(new maptalks.Coordinate(toLon, toLat), toAlt )
     obj.position.set(v3.x, v3.y, v3.z)
   }
   
@@ -73,9 +74,7 @@ async function getISSLocation() {
   let r = await (await fetch(link)).json();
   issLat = r.latitude;
   issLon = r.longitude;
-  issAlt = r.altitude;
-  console.log(issLat, issLon)
-
+  issAlt = r.altitude * 100;
 }
 
 export function updateMap() : void {

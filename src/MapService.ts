@@ -11,6 +11,8 @@ var issAlt = 0;
 
 let map: maptalks.Map | null = null;
 let threeLayer: ThreeLayer | null = null;
+let sphere: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial, THREE.Object3DEventMap>;
+
 
 // initialize new map
 export function initializeMap(container: HTMLDivElement) : void {
@@ -37,20 +39,34 @@ export function initializeMap(container: HTMLDivElement) : void {
         threeLayer.addTo(map);
     }
     
-    threeLayer.prepareToDraw = function (gl, scene, camera) {
-    const sphereGeometry = new THREE.SphereGeometry(5000, 32, 32);
-      const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-      const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-
-      // Position the sphere a bit above the map's center
-      var v3 = this.coordinateToVector3([issLon, issLat, issAlt])
-      sphere.position.set(v3.x, v3.y, v3.z)
-      scene.add(sphere);
-    }
+    drawSphere(500);
 
     
 
   }
+}
+
+function drawSphere(r: number) {
+
+  if (threeLayer){
+    threeLayer.prepareToDraw = function (gl, scene, camera) {
+      const sphereGeometry = new THREE.SphereGeometry(r, 32, 32);
+      const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      
+      // Position the sphere a bit above the map's center
+      moveObj(sphere, issLon, issLat, issAlt)
+      scene.add(sphere);
+    }
+  }
+}
+
+function moveObj(obj: any, toLon: number, toLat: number, toAlt: number) {
+  if (threeLayer) {
+    var v3 = threeLayer.coordinateToVector3([toLon, toLat, toAlt])
+    obj.position.set(v3.x, v3.y, v3.z)
+  }
+  
 }
 
 async function getISSLocation() {
@@ -59,6 +75,7 @@ async function getISSLocation() {
   issLon = r.longitude;
   issAlt = r.altitude;
   console.log(issLat, issLon)
+
 }
 
 export function updateMap() : void {
@@ -66,6 +83,7 @@ export function updateMap() : void {
   if (map)
     map.setCenter(new maptalks.Coordinate(issLon, issLat))
 
+  moveObj(sphere, issLon, issLat, issAlt)
   
 }
 

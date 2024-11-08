@@ -39,11 +39,7 @@ export function initializeMap(container: HTMLDivElement): void {
 
       threeLayer.addTo(map);
     }
-
     drawSphere(500);
-
-
-
   }
 }
 
@@ -55,7 +51,7 @@ function drawSphere(r: number) {
       sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
       // Position the sphere a bit above the map's center
-      moveObj(sphere, issLon, issLat, issAlt)
+      moveObj(sphere, issLon, issLat, 100000)
       scene.add(sphere);
     }
   }
@@ -89,8 +85,9 @@ export function updateMap(): void {
   getISSLocation()
   if (map)
     map.setCenter(new maptalks.Coordinate(issLon, issLat))
-
-  moveObj(sphere, issLon, issLat, issAlt)
+  if (issAlt !== 0) {
+    moveObj(sphere, issLon, issLat, issAlt)
+  }
 
 }
 

@@ -50,7 +50,7 @@ export function initializeMap(container: HTMLDivElement): void {
 
       threeLayer.addTo(map);
     }
-    drawSphere(500);
+    drawSphere(100);
   }
 }
 
@@ -83,7 +83,7 @@ function getISSLocation() {
     .then(r => {
       issLat = r.latitude;
       issLon = r.longitude;
-      issAlt = r.altitude * 100;
+      issAlt = r.altitude;
     }
     )
     .catch(error => {
@@ -94,8 +94,7 @@ function getISSLocation() {
 
 export function updateMap(): void {
   getISSLocation()
-  if (map)
-    map.setCenter(new maptalks.Coordinate(issLon, issLat))
+    map?.setCenter(new maptalks.Coordinate(issLon, issLat))
   if (issAlt !== 0) {
     moveObj(sphere, issLon, issLat, issAlt)
   }

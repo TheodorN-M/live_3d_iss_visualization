@@ -3,8 +3,9 @@ import './App.css';
 import { initializeMap, cleanupMap, updateMap } from './MapService';
 
 function App() {
-  const mapContainer = useRef<HTMLDivElement | null>(null); // Ref for the map container
+  const mapContainer = useRef<HTMLDivElement | null>(null); 
   const [updateInterval, setUpdateInterval] = useState<number | null>(null);
+  const [isAutoUpdating, setIsAutoUpdating] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -19,26 +20,31 @@ function App() {
     };
   }, []);
 
-  const handleStartUpdates = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-
-    if (updateInterval && updateInterval > 0) {
-      intervalRef.current = setInterval(() => {
-        updateMap();
-      }, updateInterval);
-    }
-  };
-
-  const handleStopUpdates = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+  const toggleUpdates = () => {
+    if (isAutoUpdating) {
+      // Stop updates
+      if (intervalRef.current) clearInterval(intervalRef.current);
       intervalRef.current = null;
+      setIsAutoUpdating(false);
+    } else {
+      // Start updates
+      if (updateInterval && updateInterval > 0) {
+        intervalRef.current = setInterval(() => {
+          updateMap();
+        }, updateInterval);
+        setIsAutoUpdating(true);
+      }
     }
   };
 
   const findISS = () => {
     updateMap();
   }
+
+  const changeMapLayer = () => {
+    
+  }
+  // var buttonText = "Satellite"
 
   return (
     <div className="App">
@@ -53,9 +59,11 @@ function App() {
             onChange={(e) => setUpdateInterval(Number(e.target.value))}
           />
         </div>
-        <button onClick={handleStartUpdates}>Start Auto Updates</button>
-        <button onClick={handleStopUpdates}>Stop Auto Updates</button>
+        <button onClick={toggleUpdates}>
+          {isAutoUpdating ? 'Stop Auto Updates' : 'Start Auto Updates'}
+        </button>
         <button onClick={findISS}>Find ISS</button>
+        {/* <button id="satelliteButton" onClick={changeMapLayer}></button> */}
         <div
           id="map"
           ref={mapContainer}

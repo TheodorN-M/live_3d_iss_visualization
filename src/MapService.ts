@@ -20,6 +20,7 @@ export function initializeMap(container: HTMLDivElement) : void {
     map = new maptalks.Map(container, {
       center: [0, 0],
       zoom: 4,
+      pitch: 60,
       baseLayer: new maptalks.TileLayer('base', {
         urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
         subdomains: ['a', 'b', 'c', 'd'],
@@ -47,7 +48,6 @@ export function initializeMap(container: HTMLDivElement) : void {
 }
 
 function drawSphere(r: number) {
-  
   if (threeLayer){
     threeLayer.prepareToDraw = function (gl, scene, camera) {
       const sphereGeometry = new THREE.SphereGeometry(r, 32, 32);
@@ -70,11 +70,19 @@ function moveObj(obj: THREE.Mesh, toLon: number, toLat: number, toAlt: number) {
   
 }
 
-async function getISSLocation() {
-  let r = await (await fetch(link)).json();
-  issLat = r.latitude;
-  issLon = r.longitude;
-  issAlt = r.altitude * 100;
+function getISSLocation() {
+  fetch(link)
+    .then(response => response.json())
+      .then(r => {
+        issLat = r.latitude;
+        issLon = r.longitude;
+        issAlt = r.altitude * 100;
+        }
+      )
+      .catch(error => {
+        console.error('Error fetching ISS location:', error);
+        }
+      );
 }
 
 export function updateMap() : void {

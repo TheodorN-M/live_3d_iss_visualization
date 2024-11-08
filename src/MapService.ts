@@ -15,7 +15,7 @@ let sphere: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial, THREE.Obje
 
 
 // initialize new map
-export function initializeMap(container: HTMLDivElement) : void {
+export function initializeMap(container: HTMLDivElement): void {
   if (!map) {
     map = new maptalks.Map(container, {
       center: [0, 0],
@@ -31,29 +31,29 @@ export function initializeMap(container: HTMLDivElement) : void {
     });
 
     // Initialize the ThreeLayer and add it to the map
-    if (!threeLayer){
-        threeLayer = new ThreeLayer('three', {
-            forceRenderOnMoving: true,
-            forceRenderOnRotating: true,
-        });
-        
-        threeLayer.addTo(map);
+    if (!threeLayer) {
+      threeLayer = new ThreeLayer('three', {
+        forceRenderOnMoving: true,
+        forceRenderOnRotating: true,
+      });
+
+      threeLayer.addTo(map);
     }
-    
+
     drawSphere(500);
 
-    
+
 
   }
 }
 
 function drawSphere(r: number) {
-  if (threeLayer){
+  if (threeLayer) {
     threeLayer.prepareToDraw = function (gl, scene, camera) {
       const sphereGeometry = new THREE.SphereGeometry(r, 32, 32);
       const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
       sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-      
+
       // Position the sphere a bit above the map's center
       moveObj(sphere, issLon, issLat, issAlt)
       scene.add(sphere);
@@ -64,39 +64,39 @@ function drawSphere(r: number) {
 
 function moveObj(obj: THREE.Mesh, toLon: number, toLat: number, toAlt: number) {
   if (threeLayer) {
-    var v3 = threeLayer.coordinateToVector3(new maptalks.Coordinate(toLon, toLat), toAlt )
+    var v3 = threeLayer.coordinateToVector3(new maptalks.Coordinate(toLon, toLat), toAlt)
     obj.position.set(v3.x, v3.y, v3.z)
   }
-  
+
 }
 
 function getISSLocation() {
   fetch(link)
     .then(response => response.json())
-      .then(r => {
-        issLat = r.latitude;
-        issLon = r.longitude;
-        issAlt = r.altitude * 100;
-        }
-      )
-      .catch(error => {
-        console.error('Error fetching ISS location:', error);
-        }
-      );
+    .then(r => {
+      issLat = r.latitude;
+      issLon = r.longitude;
+      issAlt = r.altitude * 100;
+    }
+    )
+    .catch(error => {
+      console.error('Error fetching ISS location:', error);
+    }
+    );
 }
 
-export function updateMap() : void {
+export function updateMap(): void {
   getISSLocation()
   if (map)
     map.setCenter(new maptalks.Coordinate(issLon, issLat))
 
   moveObj(sphere, issLon, issLat, issAlt)
-  
+
 }
 
 
 // Function to remove the map and threeLayer instances (for cleanup)
-export function cleanupMap() : void {
+export function cleanupMap(): void {
   if (threeLayer) {
     threeLayer.remove();
     threeLayer = null;

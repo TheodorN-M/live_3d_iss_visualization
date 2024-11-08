@@ -29,7 +29,7 @@ function App() {
       setIsAutoUpdating(false);
     } else {
       // Start updates
-      if (updateInterval && updateInterval > 0) {
+      if (updateInterval && updateInterval >= 1000) {
         intervalRef.current = setInterval(() => {
           updateMap();
         }, updateInterval);

@@ -13,6 +13,23 @@ let map: maptalks.Map | null = null;
 let threeLayer: ThreeLayer | null = null;
 let sphere: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial, THREE.Object3DEventMap>;
 
+const satelliteLayer = new maptalks.TileLayer('base', {
+  urlTemplate: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  subdomains: ['a', 'b', 'c', 'd'],
+  attribution:
+    '&copy; Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'
+});
+
+const mapLayer = new maptalks.TileLayer('base', {
+  urlTemplate: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png',
+  subdomains: ['a', 'b', 'c', 'd'],
+  attribution:
+    '&copy; <a href="https://wikimediafoundation.org/">Wikimedia</a>, ' +
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+});
+
+
 
 // initialize new map
 export function initializeMap(container: HTMLDivElement): void {
@@ -21,13 +38,7 @@ export function initializeMap(container: HTMLDivElement): void {
       center: [0, 0],
       zoom: 4,
       pitch: 60,
-      baseLayer: new maptalks.TileLayer('base', {
-        urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-        subdomains: ['a', 'b', 'c', 'd'],
-        attribution:
-          '&copy; <a href="http://www.osm.org/copyright">OSM</a> contributors, ' +
-          '&copy; <a href="https://carto.com/attributions">CARTO</a>',
-      }),
+      baseLayer: mapLayer,
     });
 
     // Initialize the ThreeLayer and add it to the map
@@ -91,6 +102,14 @@ export function updateMap(): void {
 
 }
 
+
+export function setSatelliteMap(): void {
+  map?.setBaseLayer(satelliteLayer);
+}
+
+export function setRegularMap(): void {
+  map?.setBaseLayer(mapLayer);
+}
 
 // Function to remove the map and threeLayer instances (for cleanup)
 export function cleanupMap(): void {

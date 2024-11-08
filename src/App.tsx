@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
-import { initializeMap, cleanupMap, updateMap } from './MapService';
+import { initializeMap, cleanupMap, updateMap, setRegularMap, setSatelliteMap } from './MapService';
 
 function App() {
   const mapContainer = useRef<HTMLDivElement | null>(null); 
   const [updateInterval, setUpdateInterval] = useState<number | null>(null);
   const [isAutoUpdating, setIsAutoUpdating] = useState(false);
+  const [satelliteView, setSatelliteView] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -42,9 +43,17 @@ function App() {
   }
 
   const changeMapLayer = () => {
-    
+    if (satelliteView) {
+      // Change to map view
+      setRegularMap();
+      setSatelliteView(false);
+    }
+    else {
+      // Change to satellite view
+      setSatelliteMap();
+      setSatelliteView(true);
+    }
   }
-  // var buttonText = "Satellite"
 
   return (
     <div className="App">
@@ -63,7 +72,9 @@ function App() {
           {isAutoUpdating ? 'Stop Auto Updates' : 'Start Auto Updates'}
         </button>
         <button onClick={findISS}>Find ISS</button>
-        {/* <button id="satelliteButton" onClick={changeMapLayer}></button> */}
+        <button onClick={changeMapLayer}>
+          {satelliteView ? 'Map view' : 'Satellite view'}
+        </button>
         <div
           id="map"
           ref={mapContainer}

@@ -36,9 +36,14 @@ function App() {
     }
   };
 
+  const findISS = () => {
+    updateMap();
+  }
+
   return (
     <div className="App">
       <header className="App-header">
+      <h1>ISS Location Tracker</h1>
         <div>
           <label htmlFor="intervalInput">Update Interval (ms): </label>
           <input
@@ -50,12 +55,13 @@ function App() {
         </div>
         <button onClick={handleStartUpdates}>Start Auto Updates</button>
         <button onClick={handleStopUpdates}>Stop Auto Updates</button>
+        <button onClick={findISS}>Find ISS</button>
         <div
           id="map"
           ref={mapContainer}
           style={{
             width: '100%',
-            height: '500px',
+            height: '800px',
           }}
         ></div>
       </header>

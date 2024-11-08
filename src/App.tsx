@@ -58,30 +58,30 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-      <h1>ISS Location Tracker</h1>
-        <div>
-          <label htmlFor="intervalInput">Update Interval (ms): </label>
-          <input
-            type="number"
-            id="intervalInput"
-            value={updateInterval ?? ''}
-            onChange={(e) => setUpdateInterval(Number(e.target.value))}
-          />
+        <h1>ISS Location Tracker</h1>
+        
+        <div className="controls-container">
+          <div className="controls">
+            <label htmlFor="intervalInput">Update Interval (ms): </label>
+            <input
+              type="number"
+              id="intervalInput"
+              value={updateInterval ?? ''}
+              onChange={(e) => setUpdateInterval(Number(e.target.value))}
+            />
+            <button onClick={toggleUpdates}>
+              {isAutoUpdating ? 'Stop Auto Updates' : 'Start Auto Updates'}
+            </button>
+            <button onClick={findISS}>Find ISS</button>
+            <button onClick={changeMapLayer}>
+              {satelliteView ? 'Map view' : 'Satellite view'}
+            </button>
+          </div>
         </div>
-        <button onClick={toggleUpdates}>
-          {isAutoUpdating ? 'Stop Auto Updates' : 'Start Auto Updates'}
-        </button>
-        <button onClick={findISS}>Find ISS</button>
-        <button onClick={changeMapLayer}>
-          {satelliteView ? 'Map view' : 'Satellite view'}
-        </button>
+
         <div
           id="map"
           ref={mapContainer}
-          style={{
-            width: '100%',
-            height: '800px',
-          }}
         ></div>
       </header>
     </div>

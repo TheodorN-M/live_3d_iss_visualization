@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/live_3d_iss_visualization/static/css/main.d8f64321.css",
+    "main.js": "/live_3d_iss_visualization/static/js/main.8656a60b.js",
+    "static/js/453.c14bc850.chunk.js": "/live_3d_iss_visualization/static/js/453.c14bc850.chunk.js",
+    "index.html": "/live_3d_iss_visualization/index.html",
+    "main.d8f64321.css.map": "/live_3d_iss_visualization/static/css/main.d8f64321.css.map",
+    "main.8656a60b.js.map": "/live_3d_iss_visualization/static/js/main.8656a60b.js.map",
+    "453.c14bc850.chunk.js.map": "/live_3d_iss_visualization/static/js/453.c14bc850.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d8f64321.css",
+    "static/js/main.8656a60b.js"
+  ]
+}
